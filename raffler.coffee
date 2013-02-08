@@ -15,6 +15,13 @@ if (Meteor.isClient)
         Entries.update({recent: true}, {$set: {recent:false}}, {multi: true})
         Entries.update(winner._id, $set: {winner: true, recent: true})
 
+      Meteor.flush() #Use flush to update DOM before checking for winners
+
+      clearWinners = confirm("Everyone's a winner! Clear all winners?") if Entries.find({winner: true}).count() == Entries.find().count()
+      if clearWinners
+        Entries.update({winner: true}, {$set: {winner:false}}, {multi: true})
+
+
     'click #clear_people': ->
       Entries.remove({})
 
